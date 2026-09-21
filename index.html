@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>АРХИВ • Анкеты персонажей АУ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#160b07;
+    --bg2:#1f100a;
+    --panel:#4a2618;
+    --panel-soft:#5c3220;
+    --panel-inset:#2a140d;
+    --border:#8a5636;
+    --border-soft:#6b3f26;
+    --text:#f3e3cf;
+    --text-dim:#cdb192;
+    --accent:#ff9d3d;
+    --accent2:#ffd27a;
+    --hp-a:#ffc93c;
+    --hp-b:#fb5607;
+    --danger:#e5533d;
+    --danger-dark:#8f2a1f;
+    --ok:#7ec98f;
+    --font-display:'Press Start 2P', monospace;
+    --font-body:'VT323', 'Courier New', monospace;
+    --radius:10px;
+  }
+  :root:not([data-theme="light"]){ color-scheme: dark; }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#160b07; --panel:#4a2618; --text:#f3e3cf;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#160b07; --panel:#4a2618; --text:#f3e3cf;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{
+    height:100%;
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:19px;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+  body{
+    background-image:
+      radial-gradient(ellipse at 20% -10%, rgba(255,157,61,0.08), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px);
+    background-attachment:fixed;
+  }
+  ::selection{ background:var(--accent); color:#1a0d06; }
+  a{ color:var(--accent2); }
+  img{ max-width:100%; display:block; }
+  button{ font-family:var(--font-body); cursor:pointer; }
+  input, textarea, select{ font-family:var(--font-body); }
+
+  /* ---------- layout ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    top:env(safe-area-inset-top,0px);
+    background:linear-gradient(180deg, var(--bg2), var(--bg) 90%);
+    border-bottom:3px solid var(--border);
+    padding:14px 18px;
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; margin-right:auto; min-width:0; }
+  .brand-soul{ font-size:22px; filter:drop-shadow(0 0 6px var(--accent)); flex:none; }
+  .brand-text{ min-width:0; }
+  .brand-title{
+    font-family:var(--font-display); font-size:15px; color:var(--accent2);
+    letter-spacing:0.5px; line-height:1.4;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .brand-sub{ font-size:15px; color:var(--text-dim); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .tabs{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tab-btn{
+    background:var(--panel-inset); color:var(--text-dim);
+    border:2px solid var(--border-soft); border-radius:6px;
+    padding:8px 14px; font-size:16px; letter-spacing:0.5px;
+    transition:transform .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .tab-btn:hover{ color:var(--text); transform:translateY(-1px); }
+  .tab-btn.active{ background:var(--accent); color:#241005; border-color:var(--accent2); font-weight:bold; }
+
+  main{ max-width:1180px; margin:0 auto; padding:22px 18px 60px; }
+  .tab-panel[hidden]{ display:none; }
+
+  .toolbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:18px; }
+  .toolbar input[type="search"], .toolbar input[type="text"], .toolbar select{
+    background:var(--panel-inset); border:2px solid var(--border-soft); color:var(--text);
+    padding:9px 12px; border-radius:6px; font-size:16px; min-width:0;
+  }
+  .toolbar input[type="search"]{ flex:1 1 220px; }
+  .spacer{ flex:1 1 auto; }
+
+  .btn{
+    background:var(--panel-inset); color:var(--text); border:2px solid var(--border-soft);
+    border-radius:6px; padding:9px 14px; font-size:16px; transition:transform .12s ease, border-color .12s;
+  }
+  .btn:hover{ border-color:var(--accent); transform:translateY(-1px); }
+  .btn-primary{ background:var(--accent); color:#241005; border-color:var(--accent2); font-weight:bold; }
+  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-danger{ background:var(--danger-dark); border-color:var(--danger); color:#ffe3de; }
+  .btn-ghost{ background:transparent; border-color:var(--border-soft); }
+  .btn-icon{ padding:7px 10px; font-size:15px; }
+  .btn:focus-visible, .tab-btn:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:2px solid var(--accent2); outline-offset:2px;
+  }
+
+  /* ---------- grid / cards ---------- */
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:16px;
+  }
+  .card{
+    background:linear-gradient(180deg, var(--panel-soft), var(--panel));
+    border:2px solid var(--border); border-radius:var(--radius);
+    overflow:hidden; display:flex; flex-direction:column;
+    box-shadow:0 6px 0 rgba(0,0,0,0.25);
+  }
+  .card-photo{
+    width:100%; aspect-ratio:4/3; object-fit:cover; background:var(--panel-inset);
+    border-bottom:2px solid var(--border);
+  }
+  .card-photo-empty{
+    width:100%; aspect-ratio:4/3; display:flex; align-items:center; justify-content:center;
+    background:repeating-linear-gradient(45deg, var(--panel-inset), var(--panel-inset) 10px, #1c0e08 10px, #1c0e08 20px);
+    border-bottom:2px solid var(--border); font-size:34px; color:var(--border-soft);
+  }
+  .card-body{ padding:12px 14px; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .card-name{ font-family:var(--font-display); font-size:14px; color:var(--accent2); line-height:1.5; }
+  .card-meta{ font-size:15px; color:var(--text-dim); }
+  .mini-hp{ height:8px; border-radius:4px; background:var(--panel-inset); border:1px solid var(--border-soft); overflow:hidden; margin-top:4px; }
+  .mini-hp-fill{ height:100%; background:linear-gradient(90deg, var(--hp-a), var(--hp-b)); }
+  .card-tags{ display:flex; gap:6px; flex-wrap:wrap; margin-top:2px; }
+  .pill{
+    font-size:13px; padding:2px 9px; border-radius:999px; border:1px solid var(--border-soft);
+    color:var(--text-dim); background:var(--panel-inset);
+  }
+  .pill.accent{ color:#241005; background:var(--accent2); border-color:var(--accent2); }
+  .card-actions{ margin-top:auto; display:flex; gap:6px; padding-top:8px; }
+  .card-actions .btn{ flex:1; text-align:center; }
+
+  .empty-state{
+    border:2px dashed var(--border-soft); border-radius:var(--radius); padding:40px 20px;
+    text-align:center; color:var(--text-dim); font-size:18px;
+  }
+  .empty-state .big{ font-family:var(--font-display); font-size:14px; color:var(--accent2); display:block; margin-bottom:10px; }
+
+  /* ---------- modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(8,4,2,0.72); backdrop-filter:blur(2px);
+    display:flex; align-items:flex-start; justify-content:center; padding:26px 14px;
+    padding-top:calc(26px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(26px + env(safe-area-inset-bottom,0px));
+    overflow-y:auto; z-index:100;
+  }
+  .modal-overlay[hidden]{ display:none; }
+  .modal{
+    background:var(--bg2); border:3px solid var(--border); border-radius:12px;
+    max-width:820px; width:100%; box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  }
+  .modal-small{ max-width:420px; }
+  .modal-head{
+    display:flex; align-items:center; gap:10px; padding:14px 18px;
+    border-bottom:2px solid var(--border-soft); position:sticky; top:0; background:var(--bg2);
+    border-radius:10px 10px 0 0;
+  }
+  .modal-title{ font-family:var(--font-display); font-size:14px; color:var(--accent2); flex:1; }
+  .modal-close{ background:transparent; border:none; color:var(--text-dim); font-size:22px; line-height:1; padding:4px 8px; }
+  .modal-close:hover{ color:var(--accent); }
+  .modal-body{ padding:18px 20px 22px; }
+  .modal-foot{ display:flex; gap:8px; padding:14px 20px; border-top:2px solid var(--border-soft); flex-wrap:wrap; }
+  .modal-foot .spacer{ flex:1; }
+
+  /* ---------- sheet view (reference layout) ---------- */
+  .sheet-top{ display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
+  .sheet-photo-wrap{ flex:0 0 220px; }
+  .sheet-photo{ width:220px; height:220px; object-fit:cover; border:2px solid var(--border); border-radius:8px; background:var(--panel-inset); }
+  .sheet-photo-empty{ width:220px; height:220px; border:2px dashed var(--border-soft); border-radius:8px; display:flex; align-items:center;justify-content:center; font-size:44px; color:var(--border-soft); }
+  .sheet-quote{ font-style:italic; color:var(--text-dim); margin-top:10px; font-size:17px; }
+  .sheet-tags{ display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+
+  .infobox{ background:var(--panel); border:2px solid var(--border); border-radius:8px; padding:12px 16px; margin-bottom:14px; }
+  .infobox-title{ font-family:var(--font-display); font-size:12px; color:var(--accent2); margin-bottom:10px; letter-spacing:0.5px; }
+  .info-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:10px 18px; flex:1; }
+  .info-field label{ display:block; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); }
+  .info-field div{ font-size:19px; color:var(--text); }
+
+  .stat-row{ display:flex; gap:22px; flex-wrap:wrap; margin-top:10px; font-size:18px; }
+  .hp-bar{ height:20px; border-radius:6px; background:var(--panel-inset); border:2px solid var(--border-soft); overflow:hidden; margin-top:6px; }
+  .hp-fill{ height:100%; background:linear-gradient(90deg, var(--hp-a), var(--hp-b)); transition:width .3s ease; }
+  .hp-label{ display:flex; justify-content:space-between; font-size:15px; color:var(--text-dim); }
+
+  .ability-item{ margin-bottom:10px; padding-left:14px; border-left:3px solid var(--accent); }
+  .ability-name{ color:var(--accent2); font-weight:bold; }
+  .likes-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:560px){ .likes-grid{ grid-template-columns:1fr; } }
+  .likes-grid ul{ margin:0; padding-left:20px; }
+  .prose{ white-space:pre-wrap; line-height:1.5; }
+
+  /* ---------- forms ---------- */
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:14px; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); margin-bottom:5px; }
+  .field input[type="text"], .field input[type="number"], .field textarea, .field select{
+    width:100%; background:var(--panel-inset); border:2px solid var(--border-soft); color:var(--text);
+    padding:9px 11px; border-radius:6px; font-size:17px;
+  }
+  .field textarea{ resize:vertical; min-height:70px; }
+  .field-row{ display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:12px; }
+  .hint{ font-size:13px; color:var(--text-dim); margin-top:4px; }
+  fieldset{ border:2px solid var(--border-soft); border-radius:8px; margin:0 0 16px; padding:12px 14px; }
+  legend{ font-family:var(--font-display); font-size:12px; color:var(--accent2); padding:0 6px; }
+
+  .ability-row{ display:flex; gap:8px; margin-bottom:8px; align-items:flex-start; }
+  .ability-row input{ flex:0 0 32%; }
+  .ability-row textarea{ flex:1; min-height:44px; }
+  .ability-row button{ flex:none; }
+
+  .photo-upload{ display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  .photo-preview{ width:110px; height:110px; object-fit:cover; border:2px solid var(--border); border-radius:8px; background:var(--panel-inset); }
+  .photo-preview-empty{ width:110px; height:110px; border:2px dashed var(--border-soft); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--border-soft); font-size:28px; }
+
+  .color-swatch-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .color-swatch{ width:36px; height:36px; border-radius:50%; border:2px solid var(--border); cursor:pointer; }
+  .color-swatch.selected{ outline:2px solid var(--accent2); outline-offset:2px; }
+
+  .toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--panel); border:2px solid var(--accent); color:var(--accent2);
+    padding:10px 18px; border-radius:8px; font-size:16px; opacity:0; pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease; z-index:200;
+    bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .overflow-x{ overflow-x:auto; }
+  footer.credit{ text-align:center; color:var(--border-soft); font-size:14px; padding:30px 0 10px; }
+
+  @media (max-width:640px){
+    .sheet-photo, .sheet-photo-empty{ width:150px; height:150px; }
+    .sheet-photo-wrap{ flex:0 0 150px; }
+    .modal-body{ padding:14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-soul">❤</span>
+    <div class="brand-text">
+      <div class="brand-title" id="siteTitleDisplay">АРХИВ АУ</div>
+      <div class="brand-sub" id="siteSubDisplay">база анкет персонажей</div>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab-btn active" data-tab="characters" role="tab">Персонажи</button>
+    <button class="tab-btn" data-tab="locations" role="tab">Локации</button>
+    <button class="tab-btn" data-tab="settings" role="tab">Настройки</button>
+  </nav>
+</div>
+
+<main>
+
+  <!-- CHARACTERS -->
+  <section id="tab-characters" class="tab-panel">
+    <div class="toolbar">
+      <input type="search" id="charSearch" placeholder="Поиск: имя, АУ, раса, роль...">
+      <select id="charSort">
+        <option value="name">По имени (А-Я)</option>
+        <option value="au">По АУ</option>
+        <option value="hp">По HP</option>
+        <option value="exp">По EXP</option>
+        <option value="new">Сначала новые</option>
+      </select>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" id="addCharBtn">+ Новый персонаж</button>
+    </div>
+    <div class="grid" id="charGrid"></div>
+    <div class="empty-state" id="charEmpty" hidden>
+      <span class="big">┈ АРХИВ ПУСТ ┈</span>
+      Здесь пока нет ни одного персонажа. Нажмите «+ Новый персонаж», чтобы создать первую анкету.
+    </div>
+  </section>
+
+  <!-- LOCATIONS -->
+  <section id="tab-locations" class="tab-panel" hidden>
+    <div class="toolbar">
+      <input type="search" id="locSearch" placeholder="Поиск локаций...">
+      <div class="spacer"></div>
+      <button class="btn btn-primary" id="addLocBtn">+ Новая локация</button>
+    </div>
+    <div class="grid" id="locGrid"></div>
+    <div class="empty-state" id="locEmpty" hidden>
+      <span class="big">┈ КАРТА ПУСТА ┈</span>
+      Локации ещё не добавлены. Нажмите «+ Новая локация», чтобы отметить первое место на карте вашего АУ.
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id="tab-settings" class="tab-panel" hidden>
+    <div class="infobox">
+      <div class="infobox-title">ВНЕШНИЙ ВИД САЙТА</div>
+      <div class="field">
+        <label for="setTitle">Название сайта</label>
+        <input type="text" id="setTitle" maxlength="60">
+      </div>
+      <div class="field">
+        <label for="setSub">Подзаголовок</label>
+        <input type="text" id="setSub" maxlength="80">
+      </div>
+      <div class="field">
+        <label>Акцентный цвет (HP-полоса, заголовки, кнопки)</label>
+        <div class="color-swatch-row" id="accentSwatches"></div>
+      </div>
+      <div class="field">
+        <label>Цвет панелей</label>
+        <div class="color-swatch-row" id="panelSwatches"></div>
+      </div>
+      <button class="btn btn-primary" id="saveSettingsBtn">Сохранить настройки</button>
+      <span class="hint">Изменения применяются сразу и сохраняются в этом браузере.</span>
+    </div>
+
+    <div class="infobox">
+      <div class="infobox-title">ДАННЫЕ</div>
+      <p class="hint" style="margin-top:0">Все анкеты, локации и настройки хранятся локально в этом браузере. Сделайте резервную копию, чтобы не потерять данные при очистке кэша или переносе на другое устройство.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" id="exportBtn">⭳ Скачать резервную копию (.json)</button>
+        <label class="btn" for="importInput" style="display:inline-block;">⭱ Загрузить резервную копию</label>
+        <input type="file" id="importInput" accept="application/json" hidden>
+        <button class="btn btn-danger" id="resetBtn">✕ Очистить все данные</button>
+      </div>
+      <p class="hint" id="dataCount"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="credit">* ты почувствовал решимость *</footer>
+
+<!-- CHARACTER MODAL -->
+<div class="modal-overlay" id="charModal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="charModalTitle">АНКЕТА</div>
+      <button class="modal-close" data-close-modal="charModal" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body" id="charModalBody"></div>
+    <div class="modal-foot" id="charModalFoot"></div>
+  </div>
+</div>
+
+<!-- LOCATION MODAL -->
+<div class="modal-overlay" id="locModal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="locModalTitle">ЛОКАЦИЯ</div>
+      <button class="modal-close" data-close-modal="locModal" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body" id="locModalBody"></div>
+    <div class="modal-foot" id="locModalFoot"></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal" hidden>
+  <div class="modal modal-small">
+    <div class="modal-head">
+      <div class="modal-title">ПОДТВЕРДИТЕ</div>
+      <button class="modal-close" data-close-modal="confirmModal" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal-body" id="confirmBody"></div>
+    <div class="modal-foot">
+      <div class="spacer"></div>
+      <button class="btn" data-close-modal="confirmModal">Отмена</button>
+      <button class="btn btn-danger" id="confirmYesBtn">Да, удалить</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = "utAuArchive_v1";
+  var ACCENTS = ["#ff9d3d","#ff5c5c","#7ec98f","#6fb7ff","#c98bff","#ffd23f","#ff7ab8"];
+  var PANELS  = ["#4a2618","#2e2e4a","#1e4a2e","#4a1e3a","#33333a","#4a3d1e"];
+
+  var defaultSettings = {
+    title:"АРХИВ АУ",
+    sub:"база анкет персонажей",
+    accent:"#ff9d3d",
+    panel:"#4a2618"
+  };
+
+  var state = { settings: Object.assign({}, defaultSettings), characters: [], locations: [] };
+
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        var parsed = JSON.parse(raw);
+        state.settings = Object.assign({}, defaultSettings, parsed.settings || {});
+        state.characters = Array.isArray(parsed.characters) ? parsed.characters : [];
+        state.locations = Array.isArray(parsed.locations) ? parsed.locations : [];
+      }
+    }catch(e){
+      console.error("Ошибка загрузки данных:", e);
+      showToast("Не удалось прочитать сохранённые данные — начинаем с чистого листа");
+    }
+  }
+
+  function save(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      return true;
+    }catch(e){
+      console.error("Ошибка сохранения:", e);
+      showToast("Не удалось сохранить: возможно, хранилище переполнено");
+      return false;
+    }
+  }
+
+  function showToast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function(){ t.classList.remove("show"); }, 2400);
+  }
+
+  function esc(str){
+    if(str === undefined || str === null) return "";
+    return String(str).replace(/[&<>"']/g, function(c){
+      return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c];
+    });
+  }
+
+  function linesToList(text){
+    return (text||"").split("\n").map(function(l){return l.trim();}).filter(Boolean);
+  }
+
+  /* ---------------- THEME ---------------- */
+  function applyTheme(){
+    var root = document.documentElement.style;
+    root.setProperty("--accent", state.settings.accent);
+    root.setProperty("--accent2", shade(state.settings.accent, 25));
+    root.setProperty("--panel", state.settings.panel);
+    root.setProperty("--panel-soft", shade(state.settings.panel, 14));
+    root.setProperty("--panel-inset", shade(state.settings.panel, -22));
+    root.setProperty("--border", shade(state.settings.panel, 40));
+    root.setProperty("--border-soft", shade(state.settings.panel, 24));
+    document.getElementById("siteTitleDisplay").textContent = state.settings.title || defaultSettings.title;
+    document.getElementById("siteSubDisplay").textContent = state.settings.sub || "";
+    document.title = (state.settings.title || defaultSettings.title) + " — Анкеты персонажей";
+  }
+
+  function shade(hex, percent){
+    hex = (hex||"#888888").replace("#","");
+    if(hex.length===3){ hex = hex.split("").map(function(c){return c+c;}).join(""); }
+    var num = parseInt(hex,16);
+    if(isNaN(num)) return "#888888";
+    var r = (num>>16), g=(num>>8 & 0xff), b=(num & 0xff);
+    function adj(c){
+      var v = percent>=0 ? c + (255-c)*(percent/100) : c + c*(percent/100);
+      return Math.max(0, Math.min(255, Math.round(v)));
+    }
+    r=adj(r); g=adj(g); b=adj(b);
+    return "#" + [r,g,b].map(function(v){ var s=v.toString(16); return s.length===1?"0"+s:s; }).join("");
+  }
+
+  /* ---------------- TABS ---------------- */
+  function initTabs(){
+    var btns = document.querySelectorAll(".tab-btn");
+    btns.forEach(function(b){
+      b.addEventListener("click", function(){
+        btns.forEach(function(x){ x.classList.remove("active"); });
+        b.classList.add("active");
+        document.querySelectorAll(".tab-panel").forEach(function(p){ p.hidden = true; });
+        document.getElementById("tab-"+b.dataset.tab).hidden = false;
+        if(b.dataset.tab === "settings") renderSettingsForm();
+      });
+    });
+  }
+
+  /* ---------------- IMAGE HANDLING ---------------- */
+  function resizeImageFile(file, maxDim, cb){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var img = new Image();
+      img.onload = function(){
+        var w = img.width, h = img.height;
+        if(w > h && w > maxDim){ h = Math.round(h*maxDim/w); w = maxDim; }
+        else if(h > maxDim){ w = Math.round(w*maxDim/h); h = maxDim; }
+        var canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        try{
+          cb(canvas.toDataURL("image/jpeg", 0.82));
+        }catch(err){
+          console.error(err);
+          showToast("Не удалось обработать изображение");
+        }
+      };
+      img.onerror = function(){ showToast("Не удалось прочитать изображение"); };
+      img.src = e.target.result;
+    };
+    reader.onerror = function(){ showToast("Не удалось прочитать файл"); };
+    reader.readAsDataURL(file);
+  }
+
+  /* ---------------- CHARACTERS: RENDER GRID ---------------- */
+  function getFilteredSortedChars(){
+    var q = (document.getElementById("charSearch").value || "").toLowerCase().trim();
+    var sort = document.getElementById("charSort").value;
+    var list = state.characters.filter(function(c){
+      if(!q) return true;
+      return [c.name,c.au,c.race,c.role,c.gender].join(" ").toLowerCase().indexOf(q) !== -1;
+    });
+    list = list.slice();
+    if(sort==="name") list.sort(function(a,b){ return (a.name||"").localeCompare(b.name||"","ru"); });
+    else if(sort==="au") list.sort(function(a,b){ return (a.au||"").localeCompare(b.au||"","ru"); });
+    else if(sort==="hp") list.sort(function(a,b){ return (Number(b.hp)||0) - (Number(a.hp)||0); });
+    else if(sort==="exp") list.sort(function(a,b){ return (Number(b.exp)||0) - (Number(a.exp)||0); });
+    else if(sort==="new") list.sort(function(a,b){ return (b.createdAt||0) - (a.createdAt||0); });
+    return list;
+  }
+
+  function renderCharacters(){
+    var grid = document.getElementById("charGrid");
+    var list = getFilteredSortedChars();
+    document.getElementById("charEmpty").hidden = state.characters.length !== 0;
+    grid.innerHTML = "";
+    if(state.characters.length === 0) return;
+    if(list.length === 0){
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Ничего не найдено по запросу.</div>';
+      return;
+    }
+    list.forEach(function(c){
+      var hpMax = Math.max(1, Number(c.hpMax)||Number(c.hp)||1);
+      var hpPct = Math.max(0, Math.min(100, (Number(c.hp)||0)/hpMax*100));
+      var card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML =
+        (c.photo ? '<img class="card-photo" src="'+c.photo+'" alt="">' : '<div class="card-photo-empty">❤</div>') +
+        '<div class="card-body">' +
+          '<div class="card-name">'+esc(c.name||"Без имени")+'</div>' +
+          '<div class="card-meta">'+esc([c.au,c.role].filter(Boolean).join(" • "))+'</div>' +
+          '<div class="mini-hp"><div class="mini-hp-fill" style="width:'+hpPct+'%"></div></div>' +
+          '<div class="card-tags">'+ (c.tags||[]).map(function(t){return '<span class="pill">'+esc(t)+'</span>';}).join("") +'</div>' +
+          '<div class="card-actions">' +
+            '<button class="btn btn-icon" data-view-char="'+c.id+'">Просмотр</button>' +
+            '<button class="btn btn-icon" data-edit-char="'+c.id+'" title="Редактировать">✎</button>' +
+            '<button class="btn btn-icon" data-dup-char="'+c.id+'" title="Дублировать">⧉</button>' +
+            '<button class="btn btn-icon btn-danger" data-del-char="'+c.id+'" title="Удалить">🗑</button>' +
+          '</div>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+  }
+
+  function charById(id){ return state.characters.find(function(c){ return c.id===id; }); }
+
+  /* ---------------- CHARACTER VIEW MODAL ---------------- */
+  function openCharView(id){
+    var c = charById(id);
+    if(!c) return;
+    document.getElementById("charModalTitle").textContent = (c.name||"АНКЕТА").toUpperCase();
+    var hpMax = Math.max(1, Number(c.hpMax)||Number(c.hp)||1);
+    var hpPct = Math.max(0, Math.min(100, (Number(c.hp)||0)/hpMax*100));
+    var abilities = (c.abilities||[]).map(function(a){
+      return '<div class="ability-item"><span class="ability-name">'+esc(a.name)+'</span>'+(a.desc? ' — '+esc(a.desc):'')+'</div>';
+    }).join("") || '<p class="hint">Способности не указаны.</p>';
+
+    var body =
+      '<div class="sheet-top">' +
+        '<div class="sheet-photo-wrap">' +
+          (c.photo ? '<img class="sheet-photo" src="'+c.photo+'" alt="">' : '<div class="sheet-photo-empty">❤</div>') +
+          (c.quote ? '<div class="sheet-quote">«'+esc(c.quote)+'»</div>' : '') +
+          '<div class="sheet-tags">'+ (c.tags||[]).map(function(t){return '<span class="pill accent">'+esc(t)+'</span>';}).join("") +'</div>' +
+        '</div>' +
+        '<div style="flex:1; min-width:220px;">' +
+          '<div class="infobox" style="margin-bottom:10px;">' +
+            '<div class="info-grid">' +
+              infoField("АУ", c.au) + infoField("Роль", c.role) + infoField("Раса", c.race) +
+              infoField("Пол", c.gender) + infoField("Возраст", c.age) + infoField("Рост", c.height) +
+              infoField("Оружие", c.weapon) +
+            '</div>' +
+          '</div>' +
+          '<div class="infobox">' +
+            '<div class="infobox-title">ХАРАКТЕРИСТИКИ</div>' +
+            '<div class="hp-label"><span>HP</span><span>'+esc(c.hp)+' / '+esc(hpMax)+'</span></div>' +
+            '<div class="hp-bar"><div class="hp-fill" style="width:'+hpPct+'%"></div></div>' +
+            '<div class="stat-row">' +
+              '<span>ATK: '+esc(c.atk||0)+'</span><span>DEF: '+esc(c.def||0)+'</span>' +
+              '<span>LOVE: '+esc(c.love||1)+'</span><span>EXP: '+esc(c.exp||0)+'</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="infobox"><div class="infobox-title">СПОСОБНОСТИ</div>'+abilities+'</div>' +
+      (c.personality ? '<div class="infobox"><div class="infobox-title">ЛИЧНОСТЬ</div><div class="prose">'+esc(c.personality)+'</div></div>' : '') +
+      (c.lore ? '<div class="infobox"><div class="infobox-title">ПРЕДЫСТОРИЯ / ЛОР</div><div class="prose">'+esc(c.lore)+'</div></div>' : '') +
+      '<div class="infobox"><div class="likes-grid">' +
+        '<div><div class="infobox-title">ЛЮБИТ</div><ul>'+ linesToList(c.likes).map(function(l){return '<li>'+esc(l)+'</li>';}).join("") +'</ul></div>' +
+        '<div><div class="infobox-title">НЕ ЛЮБИТ</div><ul>'+ linesToList(c.dislikes).map(function(l){return '<li>'+esc(l)+'</li>';}).join("") +'</ul></div>' +
+      '</div></div>';
+
+    document.getElementById("charModalBody").innerHTML = body;
+    document.getElementById("charModalFoot").innerHTML =
+      '<button class="btn" data-edit-char="'+c.id+'">✎ Редактировать</button>' +
+      '<button class="btn" data-dup-char="'+c.id+'">⧉ Дублировать</button>' +
+      '<div class="spacer"></div>' +
+      '<button class="btn btn-danger" data-del-char="'+c.id+'">🗑 Удалить</button>';
+    showModal("charModal");
+  }
+
+  function infoField(label, value){
+    return '<div class="info-field"><label>'+esc(label)+'</label><div>'+ (value? esc(value) : '—') +'</div></div>';
+  }
+
+  /* ---------------- CHARACTER EDIT FORM ---------------- */
+  function openCharForm(id){
+    var isNew = !id;
+    var c = isNew ? {
+      id: uid(), name:"", au:"", role:"", race:"", gender:"", age:"", height:"", weapon:"",
+      quote:"", tags:[], hp:20, hpMax:20, atk:0, def:0, love:1, exp:0,
+      abilities:[], personality:"", lore:"", likes:"", dislikes:"", photo:"", createdAt: Date.now()
+    } : Object.assign({}, charById(id));
+
+    document.getElementById("charModalTitle").textContent = isNew ? "НОВЫЙ ПЕРСОНАЖ" : "РЕДАКТИРОВАНИЕ";
+
+    var body =
+      '<div class="field photo-upload">' +
+        (c.photo ? '<img class="photo-preview" id="photoPreview" src="'+c.photo+'">' : '<div class="photo-preview-empty" id="photoPreview">❤</div>') +
+        '<div>' +
+          '<input type="file" accept="image/*" id="photoInput">' +
+          '<div class="hint">Фото будет уменьшено и сохранено прямо в браузере.</div>' +
+          (c.photo ? '<button class="btn btn-icon" id="removePhotoBtn" type="button" style="margin-top:6px;">Убрать фото</button>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div class="field"><label>Имя персонажа</label><input type="text" id="f_name" value="'+esc(c.name)+'"></div>' +
+      '<div class="field-row">' +
+        field("f_au","АУ", c.au) + field("f_role","Роль", c.role) + field("f_race","Раса", c.race) +
+      '</div>' +
+      '<div class="field-row">' +
+        field("f_gender","Пол", c.gender) + field("f_age","Возраст", c.age) + field("f_height","Рост", c.height) +
+      '</div>' +
+      '<div class="field"><label>Оружие</label><input type="text" id="f_weapon" value="'+esc(c.weapon)+'"></div>' +
+      '<div class="field"><label>Цитата</label><input type="text" id="f_quote" value="'+esc(c.quote)+'" placeholder="«...»"></div>' +
+      '<div class="field"><label>Метки (через запятую)</label><input type="text" id="f_tags" value="'+esc((c.tags||[]).join(", "))+'" placeholder="Честность, Жив"></div>' +
+      '<fieldset><legend>ХАРАКТЕРИСТИКИ</legend>' +
+        '<div class="field-row">' +
+          numField("f_hp","HP", c.hp) + numField("f_hpMax","Макс. HP", c.hpMax) +
+          numField("f_atk","ATK", c.atk) + numField("f_def","DEF", c.def) +
+          numField("f_love","LOVE", c.love) + numField("f_exp","EXP", c.exp) +
+        '</div>' +
+      '</fieldset>' +
+      '<fieldset><legend>СПОСОБНОСТИ</legend>' +
+        '<div id="abilityRows"></div>' +
+        '<button class="btn btn-icon" id="addAbilityBtn" type="button">+ Добавить способность</button>' +
+      '</fieldset>' +
+      '<div class="field"><label>Личность</label><textarea id="f_personality">'+esc(c.personality)+'</textarea></div>' +
+      '<div class="field"><label>Предыстория / лор</label><textarea id="f_lore">'+esc(c.lore)+'</textarea></div>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>Любит (каждый пункт с новой строки)</label><textarea id="f_likes">'+esc(c.likes)+'</textarea></div>' +
+        '<div class="field"><label>Не любит (каждый пункт с новой строки)</label><textarea id="f_dislikes">'+esc(c.dislikes)+'</textarea></div>' +
+      '</div>';
+
+    document.getElementById("charModalBody").innerHTML = body;
+    document.getElementById("charModalFoot").innerHTML =
+      '<button class="btn" id="cancelCharBtn" type="button">Отмена</button>' +
+      '<div class="spacer"></div>' +
+      '<button class="btn btn-primary" id="saveCharBtn" type="button">💾 Сохранить</button>';
+
+    var pendingPhoto = c.photo || "";
+    var abilities = (c.abilities||[]).slice();
+
+    function renderAbilityRows(){
+      var wrap = document.getElementById("abilityRows");
+      wrap.innerHTML = "";
+      abilities.forEach(function(a, idx){
+        var row = document.createElement("div");
+        row.className = "ability-row";
+        row.innerHTML =
+          '<input type="text" placeholder="Название" value="'+esc(a.name)+'" data-ab-name="'+idx+'">' +
+          '<textarea placeholder="Описание" data-ab-desc="'+idx+'">'+esc(a.desc)+'</textarea>' +
+          '<button class="btn btn-icon btn-danger" type="button" data-ab-del="'+idx+'">✕</button>';
+        wrap.appendChild(row);
+      });
+      wrap.querySelectorAll("[data-ab-name]").forEach(function(inp){
+        inp.addEventListener("input", function(){ abilities[+inp.dataset.abName].name = inp.value; });
+      });
+      wrap.querySelectorAll("[data-ab-desc]").forEach(function(inp){
+        inp.addEventListener("input", function(){ abilities[+inp.dataset.abDesc].desc = inp.value; });
+      });
+      wrap.querySelectorAll("[data-ab-del]").forEach(function(btn){
+        btn.addEventListener("click", function(){ abilities.splice(+btn.dataset.abDel,1); renderAbilityRows(); });
+      });
+    }
+    renderAbilityRows();
+
+    document.getElementById("addAbilityBtn").addEventListener("click", function(){
+      abilities.push({name:"",desc:""});
+      renderAbilityRows();
+    });
+
+    document.getElementById("photoInput").addEventListener("change", function(e){
+      var file = e.target.files[0];
+      if(!file) return;
+      resizeImageFile(file, 500, function(dataUrl){
+        pendingPhoto = dataUrl;
+        var prev = document.getElementById("photoPreview");
+        var img = document.createElement("img");
+        img.className = "photo-preview"; img.id = "photoPreview"; img.src = dataUrl;
+        prev.replaceWith(img);
+      });
+    });
+    var rmBtn = document.getElementById("removePhotoBtn");
+    if(rmBtn) rmBtn.addEventListener("click", function(){
+      pendingPhoto = "";
+      var prev = document.getElementById("photoPreview");
+      var div = document.createElement("div");
+      div.className = "photo-preview-empty"; div.id = "photoPreview"; div.textContent = "❤";
+      prev.replaceWith(div);
+    });
+
+    document.getElementById("cancelCharBtn").addEventListener("click", function(){
+      if(isNew) closeModal("charModal"); else openCharView(c.id);
+    });
+
+    document.getElementById("saveCharBtn").addEventListener("click", function(){
+      var name = document.getElementById("f_name").value.trim();
+      if(!name){ showToast("Укажите имя персонажа"); return; }
+      var updated = {
+        id: c.id,
+        name: name,
+        au: document.getElementById("f_au").value.trim(),
+        role: document.getElementById("f_role").value.trim(),
+        race: document.getElementById("f_race").value.trim(),
+        gender: document.getElementById("f_gender").value.trim(),
+        age: document.getElementById("f_age").value.trim(),
+        height: document.getElementById("f_height").value.trim(),
+        weapon: document.getElementById("f_weapon").value.trim(),
+        quote: document.getElementById("f_quote").value.trim(),
+        tags: document.getElementById("f_tags").value.split(",").map(function(s){return s.trim();}).filter(Boolean),
+        hp: Number(document.getElementById("f_hp").value)||0,
+        hpMax: Number(document.getElementById("f_hpMax").value)||0,
+        atk: Number(document.getElementById("f_atk").value)||0,
+        def: Number(document.getElementById("f_def").value)||0,
+        love: Number(document.getElementById("f_love").value)||1,
+        exp: Number(document.getElementById("f_exp").value)||0,
+        abilities: abilities.filter(function(a){ return a.name.trim() || a.desc.trim(); }),
+        personality: document.getElementById("f_personality").value.trim(),
+        lore: document.getElementById("f_lore").value.trim(),
+        likes: document.getElementById("f_likes").value,
+        dislikes: document.getElementById("f_dislikes").value,
+        photo: pendingPhoto,
+        createdAt: c.createdAt || Date.now()
+      };
+      var idx = state.characters.findIndex(function(x){ return x.id===c.id; });
+      if(idx===-1) state.characters.push(updated); else state.characters[idx] = updated;
+      save();
+      renderCharacters();
+      showToast(isNew ? "Персонаж создан" : "Изменения сохранены");
+      openCharView(c.id);
+    });
+
+    showModal("charModal");
+  }
+
+  function field(id,label,value){
+    return '<div class="field"><label>'+esc(label)+'</label><input type="text" id="'+id+'" value="'+esc(value)+'"></div>';
+  }
+  function numField(id,label,value){
+    return '<div class="field"><label>'+esc(label)+'</label><input type="number" id="'+id+'" value="'+(Number(value)||0)+'"></div>';
+  }
+
+  function duplicateChar(id){
+    var c = charById(id);
+    if(!c) return;
+    var copy = JSON.parse(JSON.stringify(c));
+    copy.id = uid();
+    copy.name = c.name + " (копия)";
+    copy.createdAt = Date.now();
+    state.characters.push(copy);
+    save();
+    renderCharacters();
+    showToast("Персонаж продублирован");
+    openCharView(copy.id);
+  }
+
+  function deleteChar(id){
+    var c = charById(id);
+    if(!c) return;
+    confirmAction("Удалить персонажа «"+esc(c.name)+"»? Это действие необратимо.", function(){
+      state.characters = state.characters.filter(function(x){ return x.id!==id; });
+      save();
+      renderCharacters();
+      closeModal("charModal");
+      showToast("Персонаж удалён");
+    });
+  }
+
+  /* ---------------- LOCATIONS ---------------- */
+  function locById(id){ return state.locations.find(function(l){ return l.id===id; }); }
+
+  function renderLocations(){
+    var grid = document.getElementById("locGrid");
+    var q = (document.getElementById("locSearch").value||"").toLowerCase().trim();
+    document.getElementById("locEmpty").hidden = state.locations.length !== 0;
+    grid.innerHTML = "";
+    if(state.locations.length===0) return;
+    var list = state.locations.filter(function(l){
+      if(!q) return true;
+      return [l.name,l.type].join(" ").toLowerCase().indexOf(q)!==-1;
+    });
+    if(list.length===0){
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Ничего не найдено.</div>';
+      return;
+    }
+    list.forEach(function(l){
+      var card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML =
+        (l.photo ? '<img class="card-photo" src="'+l.photo+'" alt="">' : '<div class="card-photo-empty">🗺</div>') +
+        '<div class="card-body">' +
+          '<div class="card-name">'+esc(l.name||"Без названия")+'</div>' +
+          '<div class="card-meta">'+esc(l.type||"")+'</div>' +
+          '<div class="card-meta">'+ (l.residents||[]).length +' житель(ей)</div>' +
+          '<div class="card-actions">' +
+            '<button class="btn btn-icon" data-view-loc="'+l.id+'">Просмотр</button>' +
+            '<button class="btn btn-icon" data-edit-loc="'+l.id+'">✎</button>' +
+            '<button class="btn btn-icon btn-danger" data-del-loc="'+l.id+'">🗑</button>' +
+          '</div>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+  }
+
+  function openLocView(id){
+    var l = locById(id);
+    if(!l) return;
+    document.getElementById("locModalTitle").textContent = (l.name||"ЛОКАЦИЯ").toUpperCase();
+    var residentNames = (l.residents||[]).map(function(cid){
+      var c = charById(cid);
+      return c ? '<span class="pill">'+esc(c.name)+'</span>' : "";
+    }).join("");
+    var body =
+      '<div class="sheet-top">' +
+        '<div class="sheet-photo-wrap">' +
+          (l.photo ? '<img class="sheet-photo" src="'+l.photo+'" alt="">' : '<div class="sheet-photo-empty">🗺</div>') +
+        '</div>' +
+        '<div style="flex:1; min-width:220px;">' +
+          '<div class="infobox">' +
+            '<div class="info-grid">' + infoField("Тип / регион", l.type) + infoField("Уровень опасности", l.danger) + '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      (l.description ? '<div class="infobox"><div class="infobox-title">ОПИСАНИЕ</div><div class="prose">'+esc(l.description)+'</div></div>' : "") +
+      (l.lore ? '<div class="infobox"><div class="infobox-title">ЛОР</div><div class="prose">'+esc(l.lore)+'</div></div>' : "") +
+      '<div class="infobox"><div class="infobox-title">ЖИТЕЛИ / СВЯЗАННЫЕ ПЕРСОНАЖИ</div>' + (residentNames || '<p class="hint">Не указаны.</p>') + '</div>';
+    document.getElementById("locModalBody").innerHTML = body;
+    document.getElementById("locModalFoot").innerHTML =
+      '<button class="btn" data-edit-loc="'+l.id+'">✎ Редактировать</button>' +
+      '<div class="spacer"></div>' +
+      '<button class="btn btn-danger" data-del-loc="'+l.id+'">🗑 Удалить</button>';
+    showModal("locModal");
+  }
+
+  function openLocForm(id){
+    var isNew = !id;
+    var l = isNew ? { id:uid(), name:"", type:"", danger:"", description:"", lore:"", photo:"", residents:[], createdAt:Date.now() } : Object.assign({}, locById(id));
+    document.getElementById("locModalTitle").textContent = isNew ? "НОВАЯ ЛОКАЦИЯ" : "РЕДАКТИРОВАНИЕ ЛОКАЦИИ";
+
+    var charOptions = state.characters.map(function(c){
+      var checked = (l.residents||[]).indexOf(c.id)!==-1 ? "checked" : "";
+      return '<label style="display:flex;align-items:center;gap:6px;margin-bottom:4px;"><input type="checkbox" value="'+c.id+'" class="resCheck" '+checked+'> '+esc(c.name)+'</label>';
+    }).join("") || '<p class="hint">Сначала создайте персонажей, чтобы связать их с локацией.</p>';
+
+    var body =
+      '<div class="field photo-upload">' +
+        (l.photo ? '<img class="photo-preview" id="locPhotoPreview" src="'+l.photo+'">' : '<div class="photo-preview-empty" id="locPhotoPreview">🗺</div>') +
+        '<div><input type="file" accept="image/*" id="locPhotoInput"><div class="hint">Изображение локации.</div></div>' +
+      '</div>' +
+      '<div class="field"><label>Название</label><input type="text" id="l_name" value="'+esc(l.name)+'"></div>' +
+      '<div class="field-row">' + field("l_type","Тип / регион", l.type) + field("l_danger","Уровень опасности", l.danger) + '</div>' +
+      '<div class="field"><label>Описание</label><textarea id="l_description">'+esc(l.description)+'</textarea></div>' +
+      '<div class="field"><label>Лор</label><textarea id="l_lore">'+esc(l.lore)+'</textarea></div>' +
+      '<fieldset><legend>ЖИТЕЛИ</legend><div style="max-height:160px;overflow-y:auto;">'+charOptions+'</div></fieldset>';
+
+    document.getElementById("locModalBody").innerHTML = body;
+    document.getElementById("locModalFoot").innerHTML =
+      '<button class="btn" id="cancelLocBtn" type="button">Отмена</button>' +
+      '<div class="spacer"></div>' +
+      '<button class="btn btn-primary" id="saveLocBtn" type="button">💾 Сохранить</button>';
+
+    var pendingPhoto = l.photo || "";
+    document.getElementById("locPhotoInput").addEventListener("change", function(e){
+      var file = e.target.files[0];
+      if(!file) return;
+      resizeImageFile(file, 600, function(dataUrl){
+        pendingPhoto = dataUrl;
+        var prev = document.getElementById("locPhotoPreview");
+        var img = document.createElement("img");
+        img.className = "photo-preview"; img.id="locPhotoPreview"; img.src = dataUrl;
+        prev.replaceWith(img);
+      });
+    });
+
+    document.getElementById("cancelLocBtn").addEventListener("click", function(){
+      if(isNew) closeModal("locModal"); else openLocView(l.id);
+    });
+
+    document.getElementById("saveLocBtn").addEventListener("click", function(){
+      var name = document.getElementById("l_name").value.trim();
+      if(!name){ showToast("Укажите название локации"); return; }
+      var residents = Array.prototype.slice.call(document.querySelectorAll(".resCheck:checked")).map(function(cb){return cb.value;});
+      var updated = {
+        id: l.id, name: name,
+        type: document.getElementById("l_type").value.trim(),
+        danger: document.getElementById("l_danger").value.trim(),
+        description: document.getElementById("l_description").value.trim(),
+        lore: document.getElementById("l_lore").value.trim(),
+        photo: pendingPhoto,
+        residents: residents,
+        createdAt: l.createdAt || Date.now()
+      };
+      var idx = state.locations.findIndex(function(x){ return x.id===l.id; });
+      if(idx===-1) state.locations.push(updated); else state.locations[idx]=updated;
+      save();
+      renderLocations();
+      showToast(isNew ? "Локация создана" : "Изменения сохранены");
+      openLocView(l.id);
+    });
+
+    showModal("locModal");
+  }
+
+  function deleteLoc(id){
+    var l = locById(id);
+    if(!l) return;
+    confirmAction("Удалить локацию «"+esc(l.name)+"»? Это действие необратимо.", function(){
+      state.locations = state.locations.filter(function(x){ return x.id!==id; });
+      save();
+      renderLocations();
+      closeModal("locModal");
+      showToast("Локация удалена");
+    });
+  }
+
+  /* ---------------- SETTINGS ---------------- */
+  function renderSettingsForm(){
+    document.getElementById("setTitle").value = state.settings.title;
+    document.getElementById("setSub").value = state.settings.sub;
+    renderSwatches("accentSwatches", ACCENTS, state.settings.accent, function(color){
+      state.settings.accent = color; applyTheme(); renderSettingsForm();
+    });
+    renderSwatches("panelSwatches", PANELS, state.settings.panel, function(color){
+      state.settings.panel = color; applyTheme(); renderSettingsForm();
+    });
+    document.getElementById("dataCount").textContent =
+      "Персонажей: " + state.characters.length + " • Локаций: " + state.locations.length;
+  }
+
+  function renderSwatches(containerId, colors, current, onPick){
+    var wrap = document.getElementById(containerId);
+    wrap.innerHTML = "";
+    colors.forEach(function(color){
+      var sw = document.createElement("div");
+      sw.className = "color-swatch" + (color.toLowerCase()===current.toLowerCase() ? " selected" : "");
+      sw.style.background = color;
+      sw.title = color;
+      sw.addEventListener("click", function(){ onPick(color); });
+      wrap.appendChild(sw);
+    });
+  }
+
+  /* ---------------- MODAL HELPERS ---------------- */
+  function showModal(id){ document.getElementById(id).hidden = false; }
+  function closeModal(id){ document.getElementById(id).hidden = true; }
+
+  function confirmAction(message, onYes){
+    document.getElementById("confirmBody").innerHTML = '<p>'+message+'</p>';
+    showModal("confirmModal");
+    var btn = document.getElementById("confirmYesBtn");
+    var fresh = btn.cloneNode(true);
+    btn.parentNode.replaceChild(fresh, btn);
+    fresh.addEventListener("click", function(){
+      closeModal("confirmModal");
+      onYes();
+    });
+  }
+
+  /* ---------------- EXPORT / IMPORT / RESET ---------------- */
+  function exportData(){
+    var json = JSON.stringify(state, null, 2);
+    var filename = "au-archive-backup-" + new Date().toISOString().slice(0,10) + ".json";
+    if(window.claude && typeof window.claude.use === "function"){
+      window.claude.use("downloads").then(function(downloads){
+        if(downloads){
+          downloads.save({filename: filename, data: json}).then(function(){
+            showToast("Резервная копия сохранена");
+          }).catch(function(){
+            fallbackDownload(json, filename);
+          });
+        } else {
+          fallbackDownload(json, filename);
+        }
+      }).catch(function(){ fallbackDownload(json, filename); });
+    } else {
+      fallbackDownload(json, filename);
+    }
+  }
+
+  function fallbackDownload(json, filename){
+    try{
+      var blob = new Blob([json], {type:"application/json"});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Резервная копия скачана");
+    }catch(e){
+      console.error(e);
+      showToast("Не удалось скачать файл в этом окружении");
+    }
+  }
+
+  function importData(file){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      try{
+        var parsed = JSON.parse(e.target.result);
+        confirmAction("Импорт заменит текущие данные в этом браузере на данные из файла. Продолжить?", function(){
+          state.settings = Object.assign({}, defaultSettings, parsed.settings||{});
+          state.characters = Array.isArray(parsed.characters) ? parsed.characters : [];
+          state.locations = Array.isArray(parsed.locations) ? parsed.locations : [];
+          save();
+          applyTheme();
+          renderCharacters();
+          renderLocations();
+          renderSettingsForm();
+          showToast("Данные импортированы");
+        });
+      }catch(err){
+        showToast("Файл повреждён или имеет неверный формат");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function resetAll(){
+    confirmAction("Удалить ВСЕ персонажи, локации и настройки без возможности восстановления?", function(){
+      state = { settings: Object.assign({}, defaultSettings), characters: [], locations: [] };
+      save();
+      applyTheme();
+      renderCharacters();
+      renderLocations();
+      renderSettingsForm();
+      showToast("Все данные очищены");
+    });
+  }
+
+  /* ---------------- EVENT DELEGATION ---------------- */
+  function initDelegation(){
+    document.body.addEventListener("click", function(e){
+      var t = e.target;
+      var id;
+      if((id = t.dataset.viewChar)) openCharView(id);
+      else if((id = t.dataset.editChar)) openCharForm(id);
+      else if((id = t.dataset.dupChar)) duplicateChar(id);
+      else if((id = t.dataset.delChar)) deleteChar(id);
+      else if((id = t.dataset.viewLoc)) openLocView(id);
+      else if((id = t.dataset.editLoc)) openLocForm(id);
+      else if((id = t.dataset.delLoc)) deleteLoc(id);
+      else if(t.dataset.closeModal) closeModal(t.dataset.closeModal);
+    });
+
+    document.querySelectorAll(".modal-overlay").forEach(function(ov){
+      ov.addEventListener("click", function(e){
+        if(e.target === ov) closeModal(ov.id);
+      });
+    });
+
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){
+        document.querySelectorAll(".modal-overlay").forEach(function(ov){
+          if(!ov.hidden) closeModal(ov.id);
+        });
+      }
+    });
+
+    document.getElementById("addCharBtn").addEventListener("click", function(){ openCharForm(null); });
+    document.getElementById("addLocBtn").addEventListener("click", function(){ openLocForm(null); });
+    document.getElementById("charSearch").addEventListener("input", renderCharacters);
+    document.getElementById("charSort").addEventListener("change", renderCharacters);
+    document.getElementById("locSearch").addEventListener("input", renderLocations);
+
+    document.getElementById("saveSettingsBtn").addEventListener("click", function(){
+      state.settings.title = document.getElementById("setTitle").value.trim() || defaultSettings.title;
+      state.settings.sub = document.getElementById("setSub").value.trim();
+      save();
+      applyTheme();
+      showToast("Настройки сохранены");
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", exportData);
+    document.getElementById("importInput").addEventListener("change", function(e){
+      var file = e.target.files[0];
+      if(file) importData(file);
+      e.target.value = "";
+    });
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+  }
+
+  /* ---------------- INIT ---------------- */
+  function init(){
+    load();
+    applyTheme();
+    initTabs();
+    initDelegation();
+    renderCharacters();
+    renderLocations();
+    renderSettingsForm();
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
